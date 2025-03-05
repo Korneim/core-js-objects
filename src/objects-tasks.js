@@ -49,8 +49,12 @@ function mergeObjects(/* objects */) {
  *    removeProperties({name: 'John', age: 30, city: 'New York'}, ['age']) => {name: 'John', city: 'New York'}
  *
  */
-function removeProperties(/* obj, keys */) {
-  throw new Error('Not implemented');
+function removeProperties(obj, keys) {
+  const result = { ...obj };
+  for (let i = 0; i < keys.length; i += 1) {
+    delete result[keys[i]];
+  }
+  return result;
 }
 
 /**
@@ -65,8 +69,11 @@ function removeProperties(/* obj, keys */) {
  *    compareObjects({a: 1, b: 2}, {a: 1, b: 2}) => true
  *    compareObjects({a: 1, b: 2}, {a: 1, b: 3}) => false
  */
-function compareObjects(/* obj1, obj2 */) {
-  throw new Error('Not implemented');
+function compareObjects(obj1, obj2) {
+  if (Object.keys(obj1).length === 0 || Object.keys(obj2).length === 0) {
+    return false;
+  }
+  return JSON.stringify(obj1) === JSON.stringify(obj2);
 }
 
 /**
@@ -80,8 +87,8 @@ function compareObjects(/* obj1, obj2 */) {
  *    isEmptyObject({}) => true
  *    isEmptyObject({a: 1}) => false
  */
-function isEmptyObject(/* obj */) {
-  throw new Error('Not implemented');
+function isEmptyObject(obj) {
+  return Object.keys(obj).length === 0;
 }
 
 /**
@@ -100,8 +107,8 @@ function isEmptyObject(/* obj */) {
  *    immutableObj.newProp = 'new';
  *    console.log(immutableObj) => {a: 1, b: 2}
  */
-function makeImmutable(/* obj */) {
-  throw new Error('Not implemented');
+function makeImmutable(obj) {
+  return Object.freeze(obj);
 }
 
 /**
@@ -132,8 +139,35 @@ function makeWord(/* lettersObject */) {
  *    sellTickets([25, 25, 50]) => true
  *    sellTickets([25, 100]) => false (The seller does not have enough money to give change.)
  */
-function sellTickets(/* queue */) {
-  throw new Error('Not implemented');
+function sellTickets(queue) {
+  const arr = Object.values(queue);
+  let count25 = 0;
+  let count50 = 0;
+
+  for (let i = 0; i < arr.length; i += 1) {
+    const bill = arr[i];
+    if (bill === 25) {
+      count25 += 1;
+    } else if (bill === 50) {
+      if (count25 >= 1) {
+        count25 -= 1;
+        count50 += 1;
+      } else {
+        return false;
+      }
+    } else if (bill === 100) {
+      if (count50 >= 1 && count25 >= 1) {
+        count50 -= 1;
+        count25 -= 1;
+      } else if (count25 >= 3) {
+        count25 -= 3;
+      } else {
+        return false;
+      }
+    }
+  }
+
+  return true;
 }
 
 /**
